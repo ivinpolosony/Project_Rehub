@@ -1,4 +1,5 @@
 class FileManagersController < ApplicationController
+	#rescue_from Exception, :with => :handle_exception
 
   def home 
 
@@ -44,6 +45,7 @@ def bubble_chart
 	  fileHash = {}
 	  @arrCorpus = {}
 	  p "$"*10 
+	  begin # Exception 
 	  (1..5).each do |k|
 		  if params["file#{k}"].present? 
 		  		if 1 == self.file_check(params["file#{k}"].original_filename)
@@ -65,7 +67,12 @@ def bubble_chart
 		  		end 	
 		  end 	
 	  end 
+raise "EXC"
 
+rescue Exception => e  
+	 flash[:notice] = "Malformed Pdf or Not a Pdf File Uploaded "
+    redirect_to request.referer || root_path
+end  #exceotp
 	  self.json_write_bubble(@arrCorpus)
 	 
 
@@ -163,7 +170,7 @@ def term_count(doc1)
 
  def new
  	#QUERY 
-
+begin  #EXCEPTI
 if request.post?
 	@arrA = []
 	@arrA1 = []
@@ -179,6 +186,8 @@ if request.post?
 		   p "query required"
 		 else 
 		 		file1 = params["query"].original_filename
+		 		
+  
 		  		filePath1 = params["query"].tempfile.path
  					fh1 = File.open(filePath1)
 					PDF::Reader.open(fh1) do |reader| #Gem pdf-reader
@@ -186,10 +195,9 @@ if request.post?
 						@arrA1 << page.text
 					end #reader
 					end # PDF:reader
-					p "@arrA1"*10 
-
+					 
 					@strFullReadStringDoc1 = @arrA1.join(" ") 
-					p @strFullReadStringDoc1
+					# @strFullReadStringDoc1
 						hash = {:key => file1, :value => @strFullReadStringDoc1}
 						document1 = TfIdfSimilarity::Document.new(hash[:value])
 						term_n_counts = document1.term_counts
@@ -198,7 +206,7 @@ if request.post?
  		end 
  	end 
  #p "$£"*10 
-  @query = @filename_n_wordcount1
+   @query = @filename_n_wordcount1
 
  	#FILES 
  	(1..5).each do |k|
@@ -225,14 +233,20 @@ if request.post?
 		  end 
 	end 
 	# FILES END 
- 	@doc_num = file_count
+ 	p @doc_num = file_count 
 	p @out = self.sim( @filename_n_wordcount ,@doc_num ,   @query )
 	
-	@out = @out.sort_by {|_key, value| value}
+	#@out = @out.sort_by {|_key, value| value}
 
 
 
 end 
+raise "EXC"
+
+rescue Exception => e  
+	 flash[:notice] = "Malformed Pdf or Not a Pdf File Uploaded "
+   # redirect_to request.referer || root_path
+end  #exceotp
  end # FUNCITON 
 
  def sim(filename_n_wordcount ,doc_num , query )
@@ -270,7 +284,7 @@ end
 		    }
 
 =end
-#p "DOC #{doc_num} OUT #{filename_n_wordcount} "
+p "DOC #{doc_num} OUT #{filename_n_wordcount} "
 
 
 =begin
@@ -280,7 +294,7 @@ end
 					{"los"=>0.477085, "angeles"=>0.477085, "times"=>0.0, "new"=>0.0, "york"=>0.0, "post"=>1.585}
 			 }
 =end
-	objQuery = Tf_idf_hash.new(query , 1)
+	objQuery = Tf_idf_hash.new(query ,doc_num )
 	query  = 	objQuery.tf_idf( objQuery.tf(), objQuery.idf() )
 
 
@@ -294,6 +308,7 @@ end
  	return  cosine = objCsh.cosine_sim(tf_idf , query)
  	 
  end 
+
 
 
 
@@ -311,3 +326,4 @@ end
 
 
 end
+
