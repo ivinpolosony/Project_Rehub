@@ -166,39 +166,8 @@ def term_count(doc1)
 
 if request.post?
 	@arrA = []
-	@arrA1 = []
-
 	@filename_n_wordcount = []
-	@filename_n_wordcount1 = []
-
  	file_count  = 0
-
- 	if params["query"].present? 
- 		@quName = params["query"].original_filename
- 		if 1 == self.file_check(params["query"].original_filename)
-		   p "query required"
-		 else 
-		 		file1 = params["query"].original_filename
-		  		filePath1 = params["query"].tempfile.path
- 					fh1 = File.open(filePath1)
-					PDF::Reader.open(fh1) do |reader| #Gem pdf-reader
-					reader.pages.each do |page|
-						@arrA1 << page.text
-					end #reader
-					end # PDF:reader
-					p "@arrA1"*10 
-
-					@strFullReadStringDoc1 = @arrA1.join(" ") 
-					p @strFullReadStringDoc1
-						hash = {:key => file1, :value => @strFullReadStringDoc1}
-						document1 = TfIdfSimilarity::Document.new(hash[:value])
-						term_n_counts = document1.term_counts
-						@data1 = {:key => file1, :value => term_n_counts}
-						@filename_n_wordcount1 << @data1
- 		end 
- 	end 
- #p "$£"*10 
-  @query = @filename_n_wordcount1
 
  	#FILES 
  	(1..5).each do |k|
@@ -226,16 +195,12 @@ if request.post?
 	end 
 	# FILES END 
  	@doc_num = file_count
-	p @out = self.sim( @filename_n_wordcount ,@doc_num ,   @query )
+	 @out = self.sim( @filename_n_wordcount ,@doc_num  )
 	
-	@out = @out.sort_by {|_key, value| value}
-
-
-
 end 
  end # FUNCITON 
 
- def sim(filename_n_wordcount ,doc_num , query )
+ def sim(filename_n_wordcount ,doc_num)
 =begin
 
  	tf_idf = {
@@ -273,17 +238,11 @@ end
 #p "DOC #{doc_num} OUT #{filename_n_wordcount} "
 
 
-=begin
 
  	@query =  {
 			"Document1.pdf"=>
 					{"los"=>0.477085, "angeles"=>0.477085, "times"=>0.0, "new"=>0.0, "york"=>0.0, "post"=>1.585}
 			 }
-=end
-	objQuery = Tf_idf_hash.new(query , 1)
-	query  = 	objQuery.tf_idf( objQuery.tf(), objQuery.idf() )
-
-
  	objTf_idf = Tf_idf_hash.new(filename_n_wordcount, doc_num)
 
  	 objTf_idf.tf()
@@ -291,7 +250,7 @@ end
 	 objTf_idf.idf()
  	 tf_idf = 	objTf_idf.tf_idf( objTf_idf.tf(), objTf_idf.idf() )
  	objCsh =Cosine_similarity_hash.new
- 	return  cosine = objCsh.cosine_sim(tf_idf , query)
+ 	return  cosine = objCsh.cosine_sim(tf_idf , @query)
  	 
  end 
 
