@@ -81,5 +81,5 @@ test:
 production:
   <<: *default
   database: rehub_production
-  username: rehub
-  password: <%= ENV['REHUB_DATABASE_PASSWORD'] %>
+ # username: rehub
+ # password: <%= ENV['REHUB_DATABASE_PASSWORD'] %>
