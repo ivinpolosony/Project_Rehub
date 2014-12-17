@@ -5,16 +5,40 @@ Rails.application.routes.draw do
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
- # root 'static_pages#home'
+
   # You can have the root of your site routed with "root"
-  root 'file_managers#index'
-  get '/signedinuserprofile' => 'profiles#signedinuserprofile'
+  root 'file_managers#home'
+  get '/tf' => 'file_managers#index'
+  
+  get '/cosine' => 'file_managers#sim'
+  post '/cosine' => 'file_managers#sim' 
+  
+  post '/bubble_chart' => 'file_managers#bubble_chart'
 
-  get '/create' => 'file_managers#create'
-  post '/create' => 'file_managers#create'
+ # get 'bubble_chart' => 'file_managers#bubble_chart'
+  #post 'bubble_chart' => 'file_managers#bubble_chart'
+  get '/new' => 'file_managers#new'
+  post '/new' => 'file_managers#new'
 
 
-  # Example of regular route:
+  get '/search' => 'search#index'
+  post '/search' => 'search#index'
+
+  get "load" => 'upload#load'
+  get '/bubble_chart' => 'upload#bubble_chart'
+  
+  get '/upload' => 'upload#index'
+  post '/upload' => 'upload#index'
+
+  
+  post '/upload/uploadFile' => 'upload#uploadFile'
+
+  get '/search/read' => 'search#read'
+
+  get '/length' => 'upload#length' 
+
+get '/signedinuserprofile' => 'profiles#signedinuserprofile'
+   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
