@@ -1,5 +1,5 @@
 source 'http://rubygems.org'
-ruby '2.0.0'
+ruby '2.1.2'
 #gem 'pg'
 # my gem, gets you tf-idf weights
 gem 'tf_idf_hash', :git => "https://github.com/rclacerna/tf_idf_hash_gem.git"
