@@ -1,9 +1,18 @@
 Rails.application.routes.draw do
+
+  resources :profiles
+
+  devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
-
+ # root 'static_pages#home'
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  root 'file_managers#index'
+  get '/signedinuserprofile' => 'profiles#signedinuserprofile'
+
+  get '/create' => 'file_managers#create'
+  post '/create' => 'file_managers#create'
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
